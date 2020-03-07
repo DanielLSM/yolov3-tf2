@@ -15,6 +15,7 @@ flags.DEFINE_enum('split', 'train', [
 flags.DEFINE_string('output_file', './data/voc2012_train.tfrecord', 'outpot dataset')
 flags.DEFINE_string('classes', './data/voc2012.names', 'classes file')
 
+IndoorVocNames = [1,2,4,7,8,10,11,14, 15, 17,19] # bicycle, bird, bottle, cat, chair, diningtable, dog, person, potttedplant, sofa, tvmonitor
 
 def build_example(annotation, class_map):
     img_path = os.path.join(
@@ -36,6 +37,12 @@ def build_example(annotation, class_map):
     difficult_obj = []
     if 'object' in annotation:
         for obj in annotation['object']:
+            #print(type(class_map[obj['name']]))
+            voc_name_int = class_map[obj['name']]
+            #print(obj['name'].encode('utf8'))
+            #return
+            if voc_name_int not in IndoorVocNames:
+                continue
             difficult = bool(int(obj['difficult']))
             difficult_obj.append(int(difficult))
 
