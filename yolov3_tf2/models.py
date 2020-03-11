@@ -36,7 +36,9 @@ yolo_tiny_anchors = np.array([(10, 14), (23, 27), (37, 58),
                               (81, 82), (135, 169),  (344, 319)],
                              np.float32) / 416
 yolo_tiny_anchor_masks = np.array([[3, 4, 5], [0, 1, 2]])
-
+yolo_max_boxes=100
+yolo_iou_threshold=0.5
+yolo_score_threshold=0.5
 
 def DarknetConv(x, filters, size, strides=1, batch_norm=True):
     if strides == 1:
@@ -192,10 +194,10 @@ def yolo_nms(outputs, anchors, masks, classes):
         boxes=tf.reshape(bbox, (tf.shape(bbox)[0], -1, 1, 4)),
         scores=tf.reshape(
             scores, (tf.shape(scores)[0], -1, tf.shape(scores)[-1])),
-        max_output_size_per_class=FLAGS.yolo_max_boxes,
-        max_total_size=FLAGS.yolo_max_boxes,
-        iou_threshold=FLAGS.yolo_iou_threshold,
-        score_threshold=FLAGS.yolo_score_threshold
+        max_output_size_per_class=yolo_max_boxes,
+        max_total_size=yolo_max_boxes,
+        iou_threshold=yolo_iou_threshold,
+        score_threshold=yolo_score_threshold
     )
 
     return boxes, scores, classes, valid_detections
